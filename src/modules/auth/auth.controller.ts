@@ -47,4 +47,14 @@ export class AuthController {
       message: 'Signed out successfully.',
     };
   }
+
+  @UseGuards(AuthGuard('refresh-jwt'))
+  @Get('/refresh-token')
+  refreshToken(@Request() request: Request & { user: User }) {
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Refreshed token successfully.',
+      data: this.authService.refreshToken(request.user),
+    };
+  }
 }

@@ -49,4 +49,11 @@ export class AuthService {
       ),
     };
   }
+
+  refreshToken(data: User) {
+    const payload = { sub: data.id, username: data.username };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
 }
