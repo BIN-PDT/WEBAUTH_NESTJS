@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
   Request,
@@ -34,6 +35,16 @@ export class AuthController {
       statusCode: HttpStatus.OK,
       message: 'Signed in successfully.',
       data: this.authService.signInUser(request.user),
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/signout')
+  signout() {
+    // REVOKE TOKEN HERE.
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Signed out successfully.',
     };
   }
 }
