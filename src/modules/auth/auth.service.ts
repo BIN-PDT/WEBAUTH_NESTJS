@@ -95,4 +95,38 @@ export class AuthService {
       );
     }
   }
+
+  async requestResetPassword(request: ExpressRquest, email: string) {
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) return;
+
+    const payload = { email: user.email };
+    const url = `${request.protocol}://${request.get('host')}/auth/confirm-reset-password`;
+    const verificationLink = this.createVerificationLink(payload, '15m', url);
+    await this.mailService.sendEmailResetPassword(user.email, verificationLink);
+  }
+
+  async confirmResetPassword(token: string, password: string) {
+    try {
+      if (!this.jwtService.verify(token)) {
+        throw new HttpException(
+          'Invalid verification token.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const { email } = this.jwtService.decode(token);
+      const user = await this.usersService.findUserByEmail(email);
+      if (!user) {
+        throw new HttpException('User not found.', HttpStatus.BAD_REQUEST);
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await this.usersService.updateUser(user.id, { password: hashedPassword });
+    } catch {
+      throw new HttpException(
+        'Invalid verification token.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

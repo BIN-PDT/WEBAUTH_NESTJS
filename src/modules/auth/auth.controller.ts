@@ -14,6 +14,8 @@ import { UserCreateDTO } from './dto/user-create.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../users/entities/user.entity';
 import { Request as ExpressRquest } from 'express';
+import { PasswordResetRequestDTO } from './dto/password-reset-request.dto';
+import { PasswordResetConfirmDTO } from './dto/password-reset-confirm.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -69,6 +71,30 @@ export class AuthController {
     return {
       statusCode: HttpStatus.OK,
       message: 'Verified account successfully.',
+    };
+  }
+
+  @Post('/request-reset-password')
+  async requestResetPassword(
+    @Request() request: ExpressRquest,
+    @Body() data: PasswordResetRequestDTO,
+  ) {
+    await this.authService.requestResetPassword(request, data.email);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Requested reset password successfully.',
+    };
+  }
+
+  @Post('/confirm-reset-password')
+  async confirmRequestPassword(
+    @Query('token') token: string,
+    @Body() data: PasswordResetConfirmDTO,
+  ) {
+    await this.authService.confirmResetPassword(token, data.password);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Confirmed reset password successfully.',
     };
   }
 }

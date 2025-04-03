@@ -13,4 +13,13 @@ export class MailService {
       context: { url: verificationLink },
     });
   }
+
+  sendEmailResetPassword(receiver: string, verificationLink: string) {
+    return this.mailService.sendMail({
+      to: receiver,
+      subject: 'Reset Password',
+      template: 'reset_password',
+      context: { url: verificationLink },
+    });
+  }
 }
