@@ -17,8 +17,8 @@ import { UsersModule } from './modules/users/users.module';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite3',
+      synchronize: false,
       entities: [User],
-      synchronize: true,
     }),
     MailModule,
     UsersModule,

@@ -47,7 +47,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/signout')
-  signout() {
+  signOut() {
     // REVOKE TOKEN HERE.
     return {
       statusCode: HttpStatus.OK,

@@ -20,7 +20,17 @@ _For privacy reasons, replace the sensitive information in `.env` with your own.
 npm install
 ```
 
-**3. RUN APPLICATION**
+**3. DATABASE**
+
+```
+npm run migration:generate
+```
+
+```
+npm run migration:run
+```
+
+**4. RUN APPLICATION**
 
 ```
 npm run start:dev
