@@ -2,6 +2,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { ConfigService } from '@nestjs/config';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -19,6 +21,13 @@ import { ConfigService } from '@nestjs/config';
         },
         defaults: {
           from: '"No Reply" <no-reply@localhost>',
+        },
+        template: {
+          dir: join(__dirname, 'templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: false,
+          },
         },
       }),
     }),

@@ -4,6 +4,7 @@ import {
   Get,
   HttpStatus,
   Post,
+  Query,
   Request,
   UseGuards,
   ValidationPipe,
@@ -12,14 +13,18 @@ import { AuthService } from './auth.service';
 import { UserCreateDTO } from './dto/user-create.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../users/entities/user.entity';
+import { Request as ExpressRquest } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signup')
-  async signUp(@Body(new ValidationPipe()) data: UserCreateDTO) {
-    const user = await this.authService.signUpUser(data);
+  async signUp(
+    @Request() request: ExpressRquest,
+    @Body(new ValidationPipe()) data: UserCreateDTO,
+  ) {
+    const user = await this.authService.signUpUser(request, data);
 
     return {
       statusCode: HttpStatus.CREATED,
@@ -30,7 +35,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('/signin')
-  async signIn(@Request() request: Request & { user: User }) {
+  async signIn(@Request() request: ExpressRquest & { user: User }) {
     return {
       statusCode: HttpStatus.OK,
       message: 'Signed in successfully.',
@@ -50,11 +55,20 @@ export class AuthController {
 
   @UseGuards(AuthGuard('refresh-jwt'))
   @Get('/refresh-token')
-  refreshToken(@Request() request: Request & { user: User }) {
+  refreshToken(@Request() request: ExpressRquest & { user: User }) {
     return {
       statusCode: HttpStatus.OK,
       message: 'Refreshed token successfully.',
       data: this.authService.refreshToken(request.user),
+    };
+  }
+
+  @Get('/verify-email')
+  async verifyEmail(@Query('token') token: string) {
+    await this.authService.verifyEmail(token);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Verified account successfully.',
     };
   }
 }
