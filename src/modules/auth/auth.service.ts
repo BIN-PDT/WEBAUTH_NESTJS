@@ -38,6 +38,7 @@ export class AuthService {
       );
     }
 
+    data.password = await bcrypt.hash(data.password, 10);
     const user = await this.usersService.createUser(data);
 
     const payload = { email: user.email };
