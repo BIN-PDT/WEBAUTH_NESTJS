@@ -9,13 +9,13 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { UserCreateDTO } from './dto/user-create.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../users/entities/user.entity';
 import { Request as ExpressRquest } from 'express';
-import { PasswordResetRequestDTO } from './dto/password-reset-request.dto';
+import { User } from '../users/entities/user.entity';
+import { AuthService } from './auth.service';
 import { PasswordResetConfirmDTO } from './dto/password-reset-confirm.dto';
+import { PasswordResetRequestDTO } from './dto/password-reset-request.dto';
+import { UserCreateDTO } from './dto/user-create.dto';
 
 @Controller('auth')
 export class AuthController {
